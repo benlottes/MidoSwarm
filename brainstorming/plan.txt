@@ -1,0 +1,39 @@
+PHASES OF DEVELOPMENT:
+0. Decisions and Planning
+	- broad idea
+	- hone in on outlines of approach
+	- make decisions
+	- create plan
+	- jupyter notebook
+	
+
+1. Engine Creation
+	- Create map basics
+	- Create different materials
+	- Create models for Midos
+	- Create all the internals for creatures (hunger, thirst, etc)
+	- Create actions for creatures and senses (preferably very flexible)
+	- Create graphical output (pics, gifs, videos)
+	- Create procedural generation
+
+2. Trial creation
+	- Create the behavior of objects over time
+	- Create time length of trials and pass/fail conditions
+
+3. Brain Creation
+	- Deliberate upon architectures (NEAT)
+	- Create template RNNs for each Mido
+	- Map inputs and outputs
+	- Create genes and mutation rates 
+	- Test (purely genetic algorithms)
+	- Repeat until satisfactory
+
+4. Reward Creation
+	- Deliberate upon architectures, techniques, and rewards
+	- Create and test different implementations
+	- Repeat until satisfactory
+
+5. Polish
+	- Spruce up graphics
+	- add various QoL improvements or niceties
+	- Perhaps UI?
