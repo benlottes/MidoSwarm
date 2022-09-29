@@ -10,6 +10,7 @@ TODO
 import os.path as osp, os
 import argparse
 
+from Tiles import Map
 
 ROOT_PATH = osp.dirname(osp.realpath(__file__))
 
@@ -22,6 +23,11 @@ def make_argparser() -> argparse.ArgumentParser:
 def main() -> None:
     argparser = make_argparser()
     args = argparser.parse_args()
+
+    map = Map.Map(10, 10, 10, 10)
+    map.print()
+
+
 
 
 if __name__ == '__main__':
