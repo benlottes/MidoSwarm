@@ -3,6 +3,7 @@
 """
 
 import argparse
+from tqdm import trange
 
 from modes.mode import Mode
 from core.simulation import Simulation
@@ -20,5 +21,5 @@ class Game(Mode):
         print('gaming...')
 
         simulation = Simulation(visitors=[Simulator(), Renderer(), Logger()])
-        for _ in range(1):
+        for _ in trange(500):
             simulation.step()
