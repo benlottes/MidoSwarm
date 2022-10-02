@@ -10,16 +10,16 @@ from typing import Callable
 class TileEngine:
 
 	colors = {
-        'red': (255, 0, 0),
-        'yellow': (255, 255, 0),
-        'blue': (0, 0, 255),
+		'red': (255, 0, 0),
+		'yellow': (255, 255, 0),
+		'blue': (0, 0, 255),
 
 		'green': (0, 255, 0),
 		'purple': (200, 100, 200),
-        'orange': (255, 165, 0),
-		
+		'orange': (255, 165, 0),
+
 		'black': (0, 0, 0),
-        'grey': (127, 127, 127),
+		'grey': (127, 127, 127),
 		'white': (255, 255, 255),
 	}
 
