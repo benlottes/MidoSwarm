@@ -25,12 +25,12 @@ class TileEngine:
 
 	def __init__(
 			self,
-            screen_size: tuple,
-            num_grids: tuple,
+			screen_size: tuple,
+			num_grids: tuple,
 			title: str,
-            target_fps: int = 60,
-            font_style: str = 'impact',
-            record = False,
+			target_fps: int = 60,
+			font_style: str = 'impact',
+			record = False,
         ) -> None:
 		"""
 		Initializes engine, calculates aspect ratio and fits active window to screen.
