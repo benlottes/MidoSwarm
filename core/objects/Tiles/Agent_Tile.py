@@ -1,4 +1,4 @@
-from Tiles.Tile import Tile
+from .Tile import Tile
 
 class Agent_Tile(Tile):
     def __init__(self, x, y, isAlive, hunger, thirst, facing):
