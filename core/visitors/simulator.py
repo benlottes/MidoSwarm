@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from ..objects.Map import Map
     from ..objects.colony import Colony
     from ..objects.agent import Agent
+    from ..objects.sword import Sword
 
 
 class Simulator(Visitor):
@@ -23,16 +24,16 @@ class Simulator(Visitor):
         self.i = 0
 
     def visit_root(self, root: Root) -> Any:  # type: ignore[override]
-        self(root.map)
+        self.visit(root.map)
         self.i += 1
 
     def visit_map(self, map: Map) -> Any:  # type: ignore[override]
         for colony in map.colonies:
-            self(colony, map)
+            self.visit(colony, map)
 
     def visit_colony(self, colony: Colony, ctx: Any) -> Any:  # type: ignore[override]
         for agent in colony.agents:
-            self(agent, ctx)
+            self.visit(agent, ctx)
 
     def visit_agent(self, agent: Agent, ctx: Any) -> Any:  # type: ignore[override]
         dist = 1

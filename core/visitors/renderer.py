@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     from ..objects.Map import Map
     from ..objects.colony import Colony
     from ..objects.agent import Agent
+    from ..objects.sword import Sword
 
 
 class Renderer(Visitor):
@@ -30,16 +31,16 @@ class Renderer(Visitor):
                 (self.engine.grid_size[0] * self.engine.num_grids[0], self.engine.grid_size[1] * self.engine.num_grids[1]),
                 self.engine.colors['white']
             )
-            self(root.map)
+            self.visit(root.map)
             self.engine.update_screen()
 
     def visit_map(self, map: Map) -> Any:  # type: ignore[override]
         for colony in map.colonies:
-            self(colony)
+            self.visit(colony)
 
     def visit_colony(self, colony: Colony) -> Any:  # type: ignore[override]
         for agent in colony.agents:
-            self(agent)
+            self.visit(agent)
 
     def visit_agent(self, agent: Agent) -> Any:  # type: ignore[override]
         self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, TileEngine.colors['red'])
