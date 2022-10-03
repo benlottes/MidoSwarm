@@ -15,7 +15,6 @@ if TYPE_CHECKING:
     from ..objects.Map import Map
     from ..objects.colony import Colony
     from ..objects.agent import Agent
-    from ..objects.sword import Sword
 
 
 class Renderer(Visitor):
