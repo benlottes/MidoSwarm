@@ -9,9 +9,10 @@ from typing import Any, TYPE_CHECKING
 if TYPE_CHECKING:
     from ..objects.object import SimObject
     from ..objects.root import Root
-    from ..objects.Map import Map
+    from ..objects.map import Map
     from ..objects.colony import Colony
     from ..objects.agent import Agent
+    from ..objects.food import Food
 
 
 class Visitor(metaclass = ABCMeta):
@@ -32,4 +33,8 @@ class Visitor(metaclass = ABCMeta):
 
     @abstractmethod
     def visit_agent(self, agent: Agent, *args, **kwargs) -> Any:
+        raise NotImplementedError
+
+    @abstractmethod
+    def visit_food(self, food: Food, *args, **kwargs) -> Any:
         raise NotImplementedError

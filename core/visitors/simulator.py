@@ -9,12 +9,14 @@ from typing import Any, TYPE_CHECKING
 
 from .visitor import Visitor
 import settings
+from icecream import ic
 
 if TYPE_CHECKING:
     from ..objects.root import Root
-    from ..objects.Map import Map
+    from ..objects.map import Map
     from ..objects.colony import Colony
     from ..objects.agent import Agent
+    from ..objects.food import Food
 
 
 class Simulator(Visitor):
@@ -22,24 +24,61 @@ class Simulator(Visitor):
         super().__init__()
         self.i = 0
 
+        # TODO convert to double dispatch for interaction
+        if not TYPE_CHECKING:
+            from ..objects.agent import Agent
+            from ..objects.food import Food
+        self.resolutions = {
+            (Agent, Agent): lambda a1, a2: a1,
+            (Agent, Food): lambda a, f: a,
+            (Food, Food): lambda f1, f2: f1,
+        }
+
     def visit_root(self, root: Root) -> Any:  # type: ignore[override]
         self.visit(root.map)
         self.i += 1
 
     def visit_map(self, map: Map) -> Any:  # type: ignore[override]
         for colony in map.colonies:
-            self.visit(colony)
+            self.visit(colony, map)
 
-    def visit_colony(self, colony: Colony) -> Any:  # type: ignore[override]
-        for agent in colony.agents:
-            self.visit(agent)
-
-    def visit_agent(self, agent: Agent) -> Any:  # type: ignore[override]
-        dist = 1
+        for food in map.food.copy():
+            if food not in map.tiles[food.pos]:
+                map.food.remove(food)
         
+        # input('here')
+        for o in map.occupied:
+            while len(items := map.tiles[o]) > 1:
+                i1 = items.pop()
+                i2 = items.pop()
+                if res := self.resolutions[type(i1), type(i2)](i1, i2):
+                    map.tiles[o].append(res)
+
+
+    def visit_colony(self, colony: Colony, map: Map) -> Any:  # type: ignore[override]
+        for agent in colony.agents:
+            self.visit(agent, map, colony)
+
+    def visit_agent(self, agent: Agent, map: Map, colony: Colony) -> Any:  # type: ignore[override]
+        if agent not in map.tiles[agent.pos]:
+            # TODO remove from colony
+            map.agents.remove(agent)
+            colony.agents.remove(agent)
+            return  # dead
+        dist = 1
+
+        agent.prev_pos = agent.pos
         agent.pos = (
-            max(0, min(settings.MAP_SIZE[0] - 1, agent.pos[0] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 25 for i in range(-dist, dist + 1)), k = 1)[0])),
-            max(0, min(settings.MAP_SIZE[1] - 1, agent.pos[1] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 25 for i in range(-dist, dist + 1)), k = 1)[0]))
+            max(0, min(settings.MAP_SIZE[0] - 1, agent.pos[0] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 10 for i in range(-dist, dist + 1)), k = 1)[0])),
+            max(0, min(settings.MAP_SIZE[1] - 1, agent.pos[1] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 10 for i in range(-dist, dist + 1)), k = 1)[0]))
         )
+
         assert 0 <= agent.pos[0] < settings.MAP_SIZE[0]
         assert 0 <= agent.pos[1] < settings.MAP_SIZE[1]
+
+        if agent.prev_pos != agent.pos:
+            map.tiles[agent.prev_pos].remove(agent)
+            map.tiles[agent.pos].append(agent)
+
+    def visit_food(self, food: Food) -> Any:  # type: ignore[override]
+        pass
