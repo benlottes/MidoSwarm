@@ -4,7 +4,7 @@
 
 from __future__ import annotations
 
-from random import randint
+from random import choices
 from typing import Any, TYPE_CHECKING
 
 from .visitor import Visitor
@@ -28,15 +28,18 @@ class Simulator(Visitor):
 
     def visit_map(self, map: Map) -> Any:  # type: ignore[override]
         for colony in map.colonies:
-            self.visit(colony, map)
+            self.visit(colony)
 
-    def visit_colony(self, colony: Colony, ctx: Any) -> Any:  # type: ignore[override]
+    def visit_colony(self, colony: Colony) -> Any:  # type: ignore[override]
         for agent in colony.agents:
-            self.visit(agent, ctx)
+            self.visit(agent)
 
-    def visit_agent(self, agent: Agent, ctx: Any) -> Any:  # type: ignore[override]
+    def visit_agent(self, agent: Agent) -> Any:  # type: ignore[override]
         dist = 1
+        
         agent.pos = (
-            max(0, min(settings.MAP_SIZE[0], agent.pos[0] + randint(-dist, dist))),
-            max(0, min(settings.MAP_SIZE[1], agent.pos[1] + randint(-dist, dist)))
+            max(0, min(settings.MAP_SIZE[0] - 1, agent.pos[0] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 25 for i in range(-dist, dist + 1)), k = 1)[0])),
+            max(0, min(settings.MAP_SIZE[1] - 1, agent.pos[1] + choices(range(-dist, dist + 1), weights = (1 if i != 0 else 25 for i in range(-dist, dist + 1)), k = 1)[0]))
         )
+        assert 0 <= agent.pos[0] < settings.MAP_SIZE[0]
+        assert 0 <= agent.pos[1] < settings.MAP_SIZE[1]

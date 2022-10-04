@@ -19,7 +19,7 @@ class Visitor(metaclass = ABCMeta):
         return object.accept(self, *args, **kwargs)
 
     @abstractmethod
-    def visit_root(self, root: Root) -> Any:
+    def visit_root(self, root: Root, *args, **kwargs) -> Any:
         raise NotImplementedError
 
     @abstractmethod
