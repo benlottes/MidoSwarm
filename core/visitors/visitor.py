@@ -15,11 +15,11 @@ if TYPE_CHECKING:
 
 
 class Visitor(metaclass = ABCMeta):
-    def __call__(self, object: SimObject, *args, **kwargs) -> None:
+    def visit(self, object: SimObject, *args, **kwargs) -> None:
         return object.accept(self, *args, **kwargs)
 
     @abstractmethod
-    def visit_root(self, root: Root) -> Any:
+    def visit_root(self, root: Root, *args, **kwargs) -> Any:
         raise NotImplementedError
 
     @abstractmethod

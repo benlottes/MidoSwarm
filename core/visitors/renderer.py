@@ -21,6 +21,17 @@ class Renderer(Visitor):
     def __init__(self) -> None:
         super().__init__()
         self.engine = TileEngine((int(0.6 * 1920), int(0.6 * 1080)), settings.MAP_SIZE, 'MidoSwarm', target_fps=24)
+        self.colony_color_options = (
+            (75, 253, 253),
+            (190, 27, 2),
+            (208, 201, 30),
+            (61, 0, 194),
+            (4, 133, 208),
+            (254, 56, 129),
+            (3, 254, 126),
+            (3, 180, 0),
+            (179, 60, 254),
+        )
 
     def visit_root(self, root: Root) -> Any:  # type: ignore[override]
         if self.engine.should_run():
@@ -30,17 +41,17 @@ class Renderer(Visitor):
                 (self.engine.grid_size[0] * self.engine.num_grids[0], self.engine.grid_size[1] * self.engine.num_grids[1]),
                 self.engine.colors['white']
             )
-            self(root.map)
+            self.visit(root.map)
             self.engine.update_screen()
 
     def visit_map(self, map: Map) -> Any:  # type: ignore[override]
-        for colony in map.colonies:
-            self(colony)
+        for i, colony in enumerate(map.colonies):
+            self.visit(colony, i)
 
-    def visit_colony(self, colony: Colony) -> Any:  # type: ignore[override]
+    def visit_colony(self, colony: Colony, colony_idx: int) -> Any:  # type: ignore[override]
         for agent in colony.agents:
-            self(agent)
+            self.visit(agent, self.colony_color_options[colony_idx])
 
-    def visit_agent(self, agent: Agent) -> Any:  # type: ignore[override]
-        self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, TileEngine.colors['red'])
-        # self.engine.render_rect(self.engine.scale_up(agent.pos), self.engine.grid_size, TileEngine.colors['red'])
+    def visit_agent(self, agent: Agent, color: tuple[int, int, int]) -> Any:  # type: ignore[override]
+        self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, color)
+        # self.engine.render_rect(self.engine.scale_up(agent.pos), self.engine.grid_size, color)

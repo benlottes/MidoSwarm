@@ -12,4 +12,4 @@ class Simulation:
 
     def step(self) -> None:
         for visitor in self.visitors:
-            visitor(self.root)
+            visitor.visit(self.root)
