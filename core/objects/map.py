@@ -13,6 +13,7 @@ from .food import Food
 
 import settings
 
+
 class Map(SimObject):
     def __init__(self, map_size: tuple[int, int], num_food: int, num_water: int, num_colonies, agents_per_colony):
         self.map_size = map_size
