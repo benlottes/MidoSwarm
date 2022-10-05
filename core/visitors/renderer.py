@@ -27,7 +27,7 @@ class Renderer(Visitor):
             settings.MAP_SIZE,
             'MidoSwarm',
             target_fps = 24,
-            record_path = osp.join('core', 'graphics')
+            # record_path = osp.join('core', 'graphics')
         )
         self.colony_color_options = (
             (75, 253, 253),
