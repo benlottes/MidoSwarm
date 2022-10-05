@@ -18,24 +18,10 @@ if TYPE_CHECKING:
     from ..objects.agent import Agent
     from ..objects.food import Food
 
-def eat(agent: Agent, food: Food) -> Agent:
-    agent.nutrition += 250
-    return agent
-
 class Simulator(Visitor):
     def __init__(self) -> None:
         super().__init__()
         self.i = 0
-
-        # TODO convert to double dispatch for interaction
-        if not TYPE_CHECKING:
-            from ..objects.agent import Agent
-            from ..objects.food import Food
-        self.resolutions = {
-            (Agent, Agent): lambda a1, a2: a1,
-            (Agent, Food): eat,
-            (Food, Food): lambda f1, f2: f1,
-        }
 
     def visit_root(self, root: Root) -> Any:  # type: ignore[override]
         self.visit(root.map)
@@ -54,7 +40,7 @@ class Simulator(Visitor):
             while len(items := map.tiles[o]) > 1:
                 i1 = items.pop()
                 i2 = items.pop()
-                if res := self.resolutions[type(i1), type(i2)](i1, i2):
+                if res := i1.interact(i2):
                     map.tiles[o].append(res)
 
 

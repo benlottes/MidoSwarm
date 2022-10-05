@@ -22,6 +22,16 @@ class Agent(SimObject):
    def accept(self, visitor: Visitor, *args, **kwargs) -> Any:
       return visitor.visit_agent(self, *args, **kwargs)
 
+   def interact(self, actor, *args, **kwargs):
+      return actor.interact_agent(self, *args, **kwargs)
+
+   def interact_agent(self, agent):
+      return self
+
+   def interact_food(self, food):
+      self.nutrition += food.nutrition_value
+      return self
+
    def kill(self) -> None:
       self.alive = False
       self.mobile = False
