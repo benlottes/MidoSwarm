@@ -64,7 +64,10 @@ class Renderer(Visitor):
             self.visit(agent, self.colony_color_options[colony_idx])
 
     def visit_agent(self, agent: Agent, color: tuple[int, int, int]) -> Any:  # type: ignore[override]
-        self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, color)
+        if agent.alive:
+            self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, color)
+        else:
+            self.engine.render_circle(self.engine.scale_up(agent.pos), self.engine.grid_size[0] / 2, (100, 100, 100))
         # self.engine.render_rect(self.engine.scale_up(agent.pos), self.engine.grid_size, color)
 
     def visit_food(self, food: Food) -> Any:  # type: ignore[override]
