@@ -2,7 +2,7 @@
 
 """
 
-import os; os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
+import os.path as osp, os; os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = 'hide'
 import pygame
 from typing import Callable
 
@@ -30,7 +30,7 @@ class TileEngine:
 			title: str,
 			target_fps: int = 60,
 			font_style: str = 'impact',
-			record = False,
+			record_path: str = None,
         ) -> None:
 		"""
 		Initializes engine, calculates aspect ratio and fits active window to screen.
@@ -46,7 +46,8 @@ class TileEngine:
 		self.running = True
 		pygame.display.set_caption(title)
 		
-		self.record = record
+		self.record_path = record_path
+		if record_path: os.makedirs(osp.join(record_path, 'frames'), exist_ok=True)
 		self.t = 0        
 
 		self.font_cache: dict[tuple[int, int], pygame.font.Font] = {}
@@ -118,8 +119,8 @@ class TileEngine:
 	def update_screen(self) -> None:
 		"""Renders necessary components to screen."""
 		pygame.display.flip()
-		if self.record:
-			pygame.image.save(self.screen, "frames/screen_" + str(self.t) + ".png")
+		if self.record_path:
+			pygame.image.save(self.screen, osp.join(self.record_path, 'frames', 'screen_' + str(self.t) + '.png'))
 		self.t += 1
 
 	def exit(self) -> None:
